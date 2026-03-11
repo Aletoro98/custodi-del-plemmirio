@@ -231,7 +231,7 @@ export default function Game() {
   };
 
   const getGameOverResult = () => {
-    if (budget < 0) {
+    if (budget < 1000) {
       return {
         title: "SCONFITTA: BANCAROTTA",
         text: "Il mare è salvo, ma i conti sono in rosso. Il Ministero ha commissariato l'Ente Gestore. La tua gestione amministrativa è stata fallimentare.",
@@ -435,7 +435,7 @@ export default function Game() {
           {/* Level 2: Dynamic Threats */}
           {giornoCorrente === 1 && (
             <div 
-              className="absolute top-[60%] left-[20%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
+              className="absolute top-[60%] left-[22%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
               onClick={() => setIsModalOpen(true)}
             >
               <img 
@@ -451,7 +451,7 @@ export default function Game() {
 
           {giornoCorrente === 2 && (
             <div 
-              className="absolute top-[20%] left-[16%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
+              className="absolute top-[20%] left-[17%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
               onClick={() => setIsModalOpen(true)}
             >
               <img 
@@ -467,7 +467,7 @@ export default function Game() {
 
           {giornoCorrente === 3 && (
             <div 
-              className="absolute top-[35%] left-[40%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
+              className="absolute top-[35%] left-[42%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
               onClick={() => setIsModalOpen(true)}
             >
               <img 
@@ -515,7 +515,7 @@ export default function Game() {
 
           {giornoCorrente === 6 && (
             <div 
-              className="absolute top-[55%] left-[89%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
+              className="absolute top-[55%] left-[90%] w-20 h-20 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer animate-bounce hover:scale-110 transition-transform"
               onClick={() => setIsModalOpen(true)}
             >
               <img 
@@ -905,8 +905,8 @@ export default function Game() {
 
 {/* Scheda Tecnica (Bio Sheet) Modal */}
       {activeBioSheet && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 z-999 flex items-center justify-center p-4 py-8 bg-black/80 backdrop-blur-sm overflow-y-auto overscroll-none">
+          <div className="bg-stone-900 border border-stone-700 rounded-2xl shadow-2xl w-full max-w-md my-auto flex-shrink-0 animate-in fade-in zoom-in duration-200 relative">
             <div className="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-800/50">
               <h3 className="text-xl font-bold text-blue-400 flex items-center gap-2">
                 <span>📂</span> DATABASE ARPA
@@ -1187,7 +1187,7 @@ export default function Game() {
               <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 mt-6">
                 <div className="text-slate-400 text-sm font-bold tracking-wider uppercase mb-2">Valutazione Direzione</div>
                 <div className="text-2xl font-bold text-white">
-                  {budget < 0 ? 'BANCAROTTA (Commissariamento)' : ecosistemaSalute < 40 ? 'DISASTRO AMBIENTALE' : 'GESTIONE SOSTENIBILE (Ottimo lavoro)'}
+                  {budget < 0 ? 'BANCAROTTA (Commissariamento)' : budget === 0 ? 'FONDI AZZERATI (Ente paralizzato)' : ecosistemaSalute < 40 ? 'DISASTRO AMBIENTALE' : 'GESTIONE SOSTENIBILE (Ottimo lavoro)'}
                 </div>
               </div>
 
