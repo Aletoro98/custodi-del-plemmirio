@@ -12,6 +12,8 @@ export default function Game() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [showDebriefing, setShowDebriefing] = useState(false);
   const [activeBioSheet, setActiveBioSheet] = useState<string | null>(null);
+  // Gestione del Tutorial
+  const [tutorialStep, setTutorialStep] = useState(0); // 1, 2, 3 sono i passaggi. 0 significa tutorial chiuso.
 
   // Biodiversity State
   const [posidoniaViva, setposidoniaViva] = useState(true);
@@ -89,7 +91,7 @@ export default function Game() {
       setEcosistemaSalute(prev => Math.min(100, Math.max(0, prev - 10)));
       setaragostaViva(false);
       setDailyReport({
-        text: "I bracconieri hanno eluso i controlli normali e razziato i fondali. La mattina dopo i biologi trovano solo tane vuote. La popolazione locale di aragoste è crollata.",
+        text: "I bracconieri hanno evitato i controlli normali e razziato i fondali. La mattina dopo i biologi trovano solo tane vuote. La popolazione locale di aragoste è crollata.",
         impacts: [
           "🍽️ Biodiversità: Aragoste decimate!",
           "📉 Salute Mare: -10%"
@@ -100,7 +102,7 @@ export default function Game() {
       setEcosistemaSalute(prev => Math.min(100, Math.max(0, prev + 8)));
       setaragostaViva(true);
       setDailyReport({
-        text: "La task-force notturna ha sorpreso i bracconieri in flagrante! Sequestrate chilometri di reti e liberate decine di Aragoste cariche di uova. Un successo per la legalità.",
+        text: "La task-force notturna ha sorpreso i bracconieri in azione! Sequestrate chilometri di reti e liberate decine di Aragoste cariche di uova. Un successo per la legalità.",
         impacts: [
           "🦞 Biodiversità: Stock ittico salvato!",
           "📈 Salute Mare: +8%",
@@ -116,7 +118,7 @@ export default function Game() {
       setBudget(prev => prev + 14500); // Netto (+15000 - 500 spesi)
       setEcosistemaSalute(prev => Math.min(100, Math.max(0, prev + 5)));
       setDailyReport({
-        text: "Hai fornito all'ispettore l'attrezzatura subacquea. Avete avvistato una Cernia bruna e documentato l'ottima salute della Posidonia. L'ispettore è affascinato: Finanziamento approvato!",
+        text: "Hai fornito all'ispettore l'attrezzatura subacquea. Avete avvistato una Cernia bruna e " + (posidoniaViva ? "documentato l'ottima salute della Posidonia." : "ispezionato lo stato dei fondali.") + " L'ispettore è affascinato: Finanziamento approvato!",
         impacts: [
           "🌿 Biodiversità: Valorizzata!",
           "📈 Salute Mare: +5%",
@@ -140,7 +142,7 @@ export default function Game() {
       setBudget(prev => prev + 3000);
       setEcosistemaSalute(prev => Math.min(100, Math.max(0, prev - 5)));
       setDailyReport({
-        text: "Hai aperto i campi boe straordinari. I diportisti hanno pagato il biglietto. Il budget respira, ma a fine giornata l'acqua è velata da idrocarburi e molte ancore hanno strappato la flora.",
+        text: "Soldi facili per l'Ente, ma un disastro per il mare. Le barche hanno portato fondi freschi, lasciando però dietro di sé acque inquinate da idrocarburi e fondali scavati profondamente dalle ancore.",
         impacts: [
           "💰 Budget: + € 3.000 (Incasso Ticket)",
           "📉 Salute Mare: -5%"
@@ -293,73 +295,124 @@ export default function Game() {
         <h2 className="text-3xl font-black text-emerald-400 mb-4 tracking-tight">RUOTA IL TELEFONO</h2>
         <p className="text-stone-300 text-lg">Per esplorare la mappa e giocare correttamente, ruota il dispositivo in orizzontale (Landscape).</p>
       </div>
-      {/* Header / HUD */}
-      <header className="bg-stone-800 p-2 md:p-4 shadow-md flex flex-col gap-4 z-10">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
-          <div className="flex items-center gap-2 text-center">
-            <h1 className="text-xl md:text-2xl font-bold text-emerald-400">ARPA - Plemmirio</h1>
+      
+{/* HUD Fluttuante - Parametri Vitali e Biodiversità */}
+      <div className="fixed top-2 left-0 right-0 z-[40] flex flex-col items-center gap-2 px-2 pointer-events-none">
+        
+        {/* UNICA RIGA: Parametri Vitali + Biodiversità (Va a capo da sola solo se lo schermo è minuscolo) */}
+        <div className="flex flex-wrap justify-center items-center gap-2 pointer-events-auto">
+          
+          {/* Pillola Giorno */}
+          <div className="bg-stone-900/80 backdrop-blur-md border border-stone-600 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 text-white">
+            <Calendar className="w-4 h-4 text-blue-400" />
+            <span className="font-bold text-sm">{giornoCorrente}/7</span>
           </div>
-          <div className="flex flex-wrap justify-center gap-2 md:gap-4">
-            <div className="flex items-center gap-2 bg-stone-700 px-3 py-1.5 rounded-lg">
-              <Calendar className="w-5 h-5 text-blue-400" />
-              <span className="font-mono font-medium uppercase">Giorno {giornoCorrente} di 7</span>
-            </div>
-            <div className={`flex items-center gap-2 bg-stone-700 px-3 py-1.5 rounded-lg ${budget < 0 ? 'text-red-500' : ''}`}>
-              <Coins className={`w-5 h-5 ${budget < 0 ? 'text-red-500' : 'text-yellow-400'}`} />
-              <span className="font-mono font-medium">{formatCurrency(budget)}</span>
-            </div>
-            <div className={`flex items-center gap-2 bg-stone-700 px-3 py-1.5 rounded-lg ${ecosistemaSalute < 40 ? 'text-red-500' : ''}`}>
-              <Heart className={`w-5 h-5 ${ecosistemaSalute < 40 ? 'text-red-500' : 'text-red-400'}`} />
-              <span className="font-mono font-medium">{ecosistemaSalute}%</span>
-            </div>
-            <div className="flex items-center gap-2 bg-stone-700 px-3 py-1.5 rounded-lg">
-              <span className="font-medium text-sm">
-                {budget < 25000 ? '⚠️ Fondi in esaurimento!' : '✅ Gestione operativa'}
-              </span>
-            </div>
-          </div>
-        </div>
 
-        {/* Biodiversity Panel */}
-        <div className="flex items-center gap-4 bg-stone-900/50 p-2 rounded-lg border border-stone-700">
-          <span className="text-sm font-semibold text-stone-400 uppercase tracking-wider">Biodiversità Protetta:</span>
-          <div className="flex gap-3">
+          {/* Pillola Budget */}
+          <div className={`backdrop-blur-md border px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 transition-colors ${budget < 25000 ? 'bg-red-900/90 border-red-500 text-red-100' : 'bg-stone-900/80 border-stone-600 text-white'}`}>
+            <Coins className={`w-4 h-4 ${budget < 25000 ? 'text-red-300' : 'text-yellow-400'}`} />
+            <span className="font-bold text-sm">{formatCurrency(budget)}</span>
+          </div>
+
+          {/* Pillola Salute Ecosistema */}
+          <div className={`backdrop-blur-md border px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 transition-colors ${ecosistemaSalute < 40 ? 'bg-red-900/90 border-red-500 text-red-100' : 'bg-stone-900/80 border-stone-600 text-white'}`}>
+            <Heart className={`w-4 h-4 ${ecosistemaSalute < 40 ? 'text-red-300' : 'text-emerald-400'}`} />
+            <span className="font-bold text-sm">{ecosistemaSalute}%</span>
+          </div>
+
+          {/* Pillola Biodiversità Marina (solo icone) */}
+          <div className="bg-stone-900/80 backdrop-blur-md border border-stone-700 px-3 py-1 rounded-full shadow-lg flex items-center gap-2">
             <button 
-              onClick={() => setActiveBioInfo(posidoniaViva ? 'Posidonia oceanica - Prateria e polmone blu' : 'Posidonia oceanica - Divelta e distrutta')}
-              className="text-3xl hover:scale-110 transition-transform"
-              title="Posidonia oceanica"
+              onClick={() => setActiveBioInfo(prev => prev === (posidoniaViva ? 'Posidonia oceanica' : 'Posidonia - Distrutta') ? null : (posidoniaViva ? 'Posidonia oceanica' : 'Posidonia - Distrutta'))} 
+              className="text-lg md:text-xl hover:scale-110 transition-transform"
             >
               {posidoniaViva ? '🌿' : '🥀'}
             </button>
             <button 
-              onClick={() => setActiveBioInfo(carettaViva ? 'Caretta caretta - Tartaruga marina' : 'Caretta caretta - Vittima di reti/plastica')}
-              className="text-3xl hover:scale-110 transition-transform"
-              title="Caretta caretta"
+              onClick={() => setActiveBioInfo(prev => prev === (carettaViva ? 'Caretta caretta' : 'Caretta - Scomparsa') ? null : (carettaViva ? 'Caretta caretta' : 'Caretta - Scomparsa'))} 
+              className="text-lg md:text-xl hover:scale-110 transition-transform"
             >
               {carettaViva ? '🐢' : '🦴'}
             </button>
             <button 
-              onClick={() => setActiveBioInfo(aragostaViva ? 'Palinurus elephas - Aragosta mediterranea' : 'Palinurus elephas - Decimata dal bracconaggio')}
-              className="text-3xl hover:scale-110 transition-transform"
-              title="Palinurus elephas"
+              onClick={() => setActiveBioInfo(prev => prev === (aragostaViva ? 'Palinurus elephas' : 'Aragosta - Estinta') ? null : (aragostaViva ? 'Palinurus elephas' : 'Aragosta - Estinta'))} 
+              className="text-lg md:text-xl hover:scale-110 transition-transform"
             >
-              {aragostaViva ? '🦞' : '🍽️'}
+              {aragostaViva ? '🦞' : '🕸️'}
             </button>
             <button 
-              onClick={() => setActiveBioInfo(cerniaViva ? 'Epinephelus marginatus - Cernia Bruna' : 'Epinephelus marginatus - Fuggita dalle tane')}
-              className="text-3xl hover:scale-110 transition-transform"
-              title="Epinephelus marginatus"
+              onClick={() => setActiveBioInfo(prev => prev === (cerniaViva ? 'Epinephelus marginatus' : 'Cernia - Estinta') ? null : (cerniaViva ? 'Epinephelus marginatus' : 'Cernia - Estinta'))} 
+              className="text-lg md:text-xl hover:scale-110 transition-transform"
             >
-              {cerniaViva ? '🐟' : '🚫'}
+              {cerniaViva ? '🐟' : '☠️'}
             </button>
           </div>
-          {activeBioInfo && (
-            <div className="ml-4 px-4 py-2 bg-stone-800 border border-stone-600 rounded-md text-sm text-stone-200 animate-in fade-in slide-in-from-left-2">
-              {activeBioInfo}
+
+        </div>
+
+        {/* Messaggio a comparsa per le info sulla biodiversità */}
+        {activeBioInfo && (
+          <div className="bg-stone-800/90 backdrop-blur-sm border border-stone-600 px-3 py-1 rounded-full text-xs text-stone-200 animate-in fade-in slide-in-from-top-2 pointer-events-auto">
+            {activeBioInfo}
+          </div>
+        )}
+
+      </div>
+
+      {/* OVERLAY TUTORIAL (Visibile solo se tutorialStep è maggiore di 0) */}
+      {tutorialStep > 0 && (
+        <div className="fixed inset-0 z-[99999] flex justify-center pointer-events-auto transition-opacity duration-300">
+          
+          {/* Tasto "Salta Tutorial" sempre visibile e staccato dalla barra */}
+          <button 
+            onClick={() => setTutorialStep(0)} 
+            className="absolute top-20 right-4 bg-stone-900/80 backdrop-blur-md text-white px-3 py-1.5 rounded-full font-bold text-sm shadow-lg hover:scale-105 transition-transform border border-stone-600"
+          >
+            Salta Tutorial ✖
+          </button>
+
+          {/* STEP 1: La Plancia di Comando (punta in alto all'HUD) */}
+          {tutorialStep === 1 && (
+            <div className="absolute top-24 md:top-28 flex flex-col items-center animate-in fade-in zoom-in duration-300 px-4">
+              <div className="text-4xl animate-bounce mb-2 drop-shadow-lg">⬆️</div>
+              <div className="bg-stone-100 text-stone-900 p-4 rounded-xl max-w-sm text-center shadow-2xl border-b-4 border-cyan-600">
+                <h3 className="font-bold text-lg text-cyan-700 mb-2">1. La Plancia di Comando</h3>
+                <p className="text-sm mb-4 font-medium">Benvenuto Direttore. Tieni d'occhio i fondi (💶) e la salute marina (🌿). Se scendono a zero, la tua gestione fallirà. Fai attenzione anche all'estinzione delle specie chiave!</p>
+                <button onClick={() => setTutorialStep(2)} className="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-bold w-full transition-colors shadow-md">
+                  Avanti ➔
+                </button>
+              </div>
             </div>
           )}
+
+          {/* STEP 2: Le Info (punta al centro alle icone statiche) */}
+          {tutorialStep === 2 && (
+            <div className="absolute top-1/2 -translate-y-1/2 flex flex-col items-center animate-in fade-in zoom-in duration-300 px-4">
+              <div className="bg-stone-100 text-stone-900 p-4 rounded-xl max-w-sm text-center shadow-2xl border-b-4 border-blue-600">
+                <h3 className="font-bold text-lg text-blue-700 mb-2">2. Esplora i Fondali</h3>
+                <p className="text-sm mb-4 font-medium">Sulla mappa marina troverai icone informative. Toccale per aprire il Database ARPA e studiare la biologia delle specie prima di prendere decisioni.</p>
+                <button onClick={() => setTutorialStep(3)} className="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-bold w-full transition-colors shadow-md">
+                  Avanti ➔
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3: L'Emergenza (punta in basso ai token evento) */}
+          {tutorialStep === 3 && (
+            <div className="absolute bottom-16 md:bottom-24 flex flex-col items-center animate-in fade-in zoom-in duration-300 px-4">
+              <div className="bg-stone-100 text-stone-900 p-4 rounded-xl max-w-sm text-center shadow-2xl border-b-4 border-red-600">
+                <h3 className="font-bold text-lg text-red-700 mb-2">3. Affronta le Emergenze</h3>
+                <p className="text-sm mb-4 font-medium">I gettoni rossi pulsanti sono minacce attive (come bracconieri o inquinamento). Toccali per intervenire e salvare l'Area Marina Protetta.</p>
+                <button onClick={() => setTutorialStep(0)} className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-bold w-full transition-colors shadow-md animate-pulse">
+                  Immergiti 🌊
+                </button>
+              </div>
+            </div>
+          )}
+
         </div>
-      </header>
+      )}
 
       {/* Main Game Area - Map */}
       <main className="flex-1 relative overflow-hidden bg-stone-950 flex items-center justify-center p-4">
@@ -579,7 +632,7 @@ export default function Game() {
             
             <div className="p-6">
               <p className="text-stone-300 mb-6 leading-relaxed">
-                Il primo giorno inizia con un allarme dai biologi marini: l&apos;innalzamento delle temperature ha causato un&apos;esplosione demografica di <span className="text-emerald-400 font-semibold italic">Hermodice carunculata</span> (Vermocani). Questi predatori voraci stanno attaccando stelle marine e ricci all&apos;interno della prateria di Posidonia oceanica. Minaccia: I01 (Proliferazione specie termofile).
+                Il primo giorno inizia con un allarme dai biologi marini: l'innalzamento delle temperature ha causato un'esplosione demografica (una moltiplicazione improvvisa e massiccia) di <span className="text-emerald-400 font-semibold italic">Hermodice carunculata</span> (Vermocani). Questi predatori voraci stanno attaccando stelle marine e ricci all'interno della prateria di Posidonia oceanica. Minaccia: I01 - Proliferazione specie termofile (organismi che prosperano grazie al riscaldamento delle acque).
               </p>
 
               <div className="space-y-3">
@@ -1270,10 +1323,12 @@ export default function Game() {
                   </ul>
                 </div>
               </div>
-
-              <div className="flex justify-center">
+<div className="flex justify-center">
                 <button 
-                  onClick={() => setGameStarted(true)}
+                  onClick={() => {
+                    setGameStarted(true);
+                    setTutorialStep(1);
+                  }}
                   className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-lg md:text-xl py-4 px-10 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] hover:-translate-y-1 transition-all duration-200"
                 >
                   INIZIA LA SETTIMANA (Giorno 1)
