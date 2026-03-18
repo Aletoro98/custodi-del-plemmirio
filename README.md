@@ -1,7 +1,7 @@
 # 🌊 Custodi del Plemmirio
 **Simulatore Gestionale Web-Based per l'Educazione Ambientale (Serious Game)**
 
-🔗 **[Inserisci qui il link alla Demo Live su Vercel, es. https://custodi-del-plemmirio.vercel.app]**
+🔗 **https://custodi-del-plemmirio.vercel.app**
 
 ## 📖 Il Progetto
 "Custodi del Plemmirio" è un Serious Game gestionale (Edutainment) sviluppato come caso di studio. L'obiettivo non è il semplice intrattenimento, ma l'apprendimento di concetti complessi legati alla biologia della conservazione attraverso il *learning by doing*.
@@ -36,7 +36,7 @@ Per eseguire il simulatore localmente, assicurati di avere **Node.js** installat
 
 1. **Clona il repository e installa le dipendenze:**
    ```bash
-   git clone [https://github.com/Aletoro98/custodi-del-plemmirio.git](https://github.com/Aletoro98/custodi-del-plemmirio.git)
+   git clone https://github.com/Aletoro98/custodi-del-plemmirio.git
    cd custodi-del-plemmirio
    npm install
    ```
