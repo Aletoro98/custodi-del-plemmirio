@@ -377,7 +377,7 @@ export default function Game() {
               <div className="text-4xl animate-bounce mb-2 drop-shadow-lg">⬆️</div>
               <div className="bg-stone-100 text-stone-900 p-4 rounded-xl max-w-sm text-center shadow-2xl border-b-4 border-cyan-600">
                 <h3 className="font-bold text-lg text-cyan-700 mb-2">1. La Plancia di Comando</h3>
-                <p className="text-sm mb-4 font-medium">Benvenuto Direttore. Tieni d'occhio i fondi (💶) e la salute marina (🌿). Se scendono a zero, la tua gestione fallirà. Fai attenzione anche all'estinzione delle specie chiave!</p>
+                <p className="text-sm mb-4 font-medium">Benvenuto Direttore. Tieni d'occhio i fondi (💶) e la salute marina (💚). Se scendono a zero, la tua gestione fallirà. Fai attenzione anche all'estinzione delle specie chiave!</p>
                 <button onClick={() => setTutorialStep(2)} className="bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded-lg font-bold w-full transition-colors shadow-md">
                   Avanti ➔
                 </button>
@@ -403,7 +403,7 @@ export default function Game() {
             <div className="absolute bottom-16 md:bottom-24 flex flex-col items-center animate-in fade-in zoom-in duration-300 px-4">
               <div className="bg-stone-100 text-stone-900 p-4 rounded-xl max-w-sm text-center shadow-2xl border-b-4 border-red-600">
                 <h3 className="font-bold text-lg text-red-700 mb-2">3. Affronta le Emergenze</h3>
-                <p className="text-sm mb-4 font-medium">I gettoni rossi pulsanti sono minacce attive (come bracconieri o inquinamento). Toccali per intervenire e salvare l'Area Marina Protetta.</p>
+                <p className="text-sm mb-4 font-medium">I gettoni rossi intermittenti sono minacce attive (come bracconieri o inquinamento). Toccali per intervenire e salvare l'Area Marina Protetta.</p>
                 <button onClick={() => setTutorialStep(0)} className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg font-bold w-full transition-colors shadow-md animate-pulse">
                   Immergiti 🌊
                 </button>
